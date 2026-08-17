@@ -1,32 +1,42 @@
-# daily-activity
+# congrats, you found the secret repo that generates commits
 
-Scheduled GitHub Action that makes 1-5 commits a day at randomized times, using
-random messages from `data/commit_messages.txt`.
+there is no product. there is no roadmap. there is only the graph, and the
+graph must be green.
 
-## Setup
+every day, a GitHub Action wakes up, makes 1-5 fake conventional commits
+(`feat(bullshit-subsystem): added bullshit to shit_func123` — real example),
+scatters them at slightly different times so it doesn't look too suspicious,
+and pushes. that's it. that's the whole project.
 
-1. Create a repo on GitHub and push this to it (see below).
-2. **Important:** for commits to count on your contribution graph, the commit
-   author name/email must match an email verified on your GitHub account.
-   Set these as repo variables (Settings -> Secrets and variables -> Actions -> Variables):
-   - `COMMIT_AUTHOR_NAME` — your GitHub username or display name
-   - `COMMIT_AUTHOR_EMAIL` — an email verified on your account. To keep it
-     private, use your GitHub-provided noreply address (Settings -> Emails ->
-     "Keep my email address private"), format:
+## setup (do this once)
+
+1. push this to its own repo on GitHub.
+2. for the commits to actually count on your contribution graph, set these
+   as repo variables (Settings -> Secrets and variables -> Actions -> Variables):
+   - `COMMIT_AUTHOR_NAME` — your GitHub username
+   - `COMMIT_AUTHOR_EMAIL` — an email verified on your account. use your
+     noreply address if you don't want your real email in every commit:
      `ID+username@users.noreply.github.com`
-   If these vars aren't set, commits fall back to a `placeholder` identity and
-   won't count toward your graph.
-3. Settings -> Actions -> General -> Workflow permissions -> set to
-   "Read and write permissions" so the default `GITHUB_TOKEN` can push.
-4. The workflow also runs on `workflow_dispatch`, so you can trigger it
-   manually from the Actions tab to test before waiting for the daily cron.
+   - skip this and every commit is authored by `placeholder`, which does
+     nothing for you.
+3. Settings -> Actions -> General -> Workflow permissions -> "Read and write
+   permissions", so it's allowed to push.
+4. optionally run it once by hand from the Actions tab (`workflow_dispatch`)
+   to make sure it works before trusting the cron.
 
-## Notes
+## how the messages get made
 
-- GitHub disables scheduled workflows after 60 days with no repo activity;
-  this repo's own daily pushes count as activity, so it should stay alive.
-- Contributions only count on the repo's default branch, and only for
-  non-fork repos (or forks with the right settings) — keep this as its own
-  standalone repo.
-- Commit times are randomized within roughly the last 10 hours of each run so
-  they don't all land at the exact same minute every day.
+`data/commit_types.txt`, `commit_scopes.txt`, `commit_funcs.txt`, and
+`commit_verbs.txt` each hold a pile of fragments. every commit picks one of
+each at random and glues them into `type(scope): verb` — so it's always a
+technically-valid conventional commit that means nothing.
+
+## honest notes
+
+- GitHub kills scheduled workflows after 60 days of repo silence; this repo
+  feeds itself so that shouldn't happen, but if the graph goes gray, check
+  the Actions tab.
+- only counts on the default branch, and this needs to be its own repo
+  (not a fork).
+- you didn't hear it from me but this is a bit of a lie to everyone who
+  looks at your profile.
