@@ -18,9 +18,6 @@ jobs:
           fetch-depth: 0
 
       - name: Generate commits
-        env:
-          COMMIT_AUTHOR_NAME: ${{ vars.COMMIT_AUTHOR_NAME }}
-          COMMIT_AUTHOR_EMAIL: ${{ vars.COMMIT_AUTHOR_EMAIL }}
         run: bash scripts/autocommit.sh
 
       - name: Push

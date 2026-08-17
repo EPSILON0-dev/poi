@@ -4,10 +4,8 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-AUTHOR_NAME="${COMMIT_AUTHOR_NAME:-placeholder}"
-AUTHOR_EMAIL="${COMMIT_AUTHOR_EMAIL:-placeholder@example.com}"
-git config user.name "$AUTHOR_NAME"
-git config user.email "$AUTHOR_EMAIL"
+git config user.name "EPSILON0-dev"
+git config user.email "lukaforenc@gmail.com"
 
 LOG_FILES=("activity/log.md" "activity/notes.md" "activity/scratch.md" "activity/journal.md")
 
