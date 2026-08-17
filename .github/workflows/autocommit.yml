@@ -1,0 +1,27 @@
+name: daily-activity
+
+on:
+  schedule:
+    # runs once a day; actual commit timestamps are randomized inside the job
+    - cron: "17 13 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  autocommit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate commits
+        env:
+          COMMIT_AUTHOR_NAME: ${{ vars.COMMIT_AUTHOR_NAME }}
+          COMMIT_AUTHOR_EMAIL: ${{ vars.COMMIT_AUTHOR_EMAIL }}
+        run: bash scripts/autocommit.sh
+
+      - name: Push
+        run: git push origin HEAD:${{ github.ref_name }}
