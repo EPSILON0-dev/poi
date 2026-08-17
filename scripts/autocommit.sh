@@ -9,14 +9,23 @@ AUTHOR_EMAIL="${COMMIT_AUTHOR_EMAIL:-placeholder@example.com}"
 git config user.name "$AUTHOR_NAME"
 git config user.email "$AUTHOR_EMAIL"
 
-MESSAGES_FILE="data/commit_messages.txt"
 LOG_FILES=("activity/log.md" "activity/notes.md" "activity/scratch.md" "activity/journal.md")
+
+mapfile -t TYPES < data/commit_types.txt
+mapfile -t SCOPES < data/commit_scopes.txt
+mapfile -t FUNCS < data/commit_funcs.txt
+mapfile -t VERBS < data/commit_verbs.txt
+
+random_message() {
+  local type="${TYPES[$(( RANDOM % ${#TYPES[@]} ))]}"
+  local scope="${SCOPES[$(( RANDOM % ${#SCOPES[@]} ))]}"
+  local func="${FUNCS[$(( RANDOM % ${#FUNCS[@]} ))]}"
+  local verb="${VERBS[$(( RANDOM % ${#VERBS[@]} ))]}"
+  echo "${type}(${scope}): ${verb//\{func\}/$func}"
+}
 
 NUM_COMMITS=$(( (RANDOM % 5) + 1 ))
 echo "Making $NUM_COMMITS commit(s)"
-
-mapfile -t MESSAGES < <(shuf "$MESSAGES_FILE")
-MSG_COUNT=${#MESSAGES[@]}
 
 NOW_EPOCH=$(date -u +%s)
 SPREAD_SECONDS=$(( 10 * 3600 )) # spread commits across the last 10 hours
@@ -28,7 +37,7 @@ done
 mapfile -t SORTED < <(printf '%s\n' "${OFFSETS[@]}" | sort -rn)
 
 for ((i = 0; i < NUM_COMMITS; i++)); do
-  MSG="${MESSAGES[$(( i % MSG_COUNT ))]}"
+  MSG=$(random_message)
   TARGET="${LOG_FILES[$(( RANDOM % ${#LOG_FILES[@]} ))]}"
   mkdir -p "$(dirname "$TARGET")"
 
